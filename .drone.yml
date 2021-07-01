@@ -1,12 +1,38 @@
 kind: pipeline
-name: default
+type: docker
+name: build
 
 steps:
-- name: build
-  image: plugins/docker
-  settings:
-    repo: Drone-Testin-Dev/drone-test1
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
+- name: test
+  image: node
+  commands:
+  - npm install
+  - npm run test
+
+trigger:
+  event:
+  - push
+  - pull_request
+
+---
+kind: pipeline
+type: docker
+name: deploy
+
+steps:
+- name: test
+  image: node
+  commands:
+  - npm install
+  - npm run test
+  - npm run bundle
+
+- name: deploy
+  image: plugins/ssh
+  settings: ...
+
+trigger:
+  event:
+  - promote
+  target:
+  - production
