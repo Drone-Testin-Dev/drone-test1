@@ -1,29 +1,11 @@
----
 kind: pipeline
-type: docker
-name: linux-amd64
-platform:
-  arch: amd64
-  os: linux
+name: default
+
 steps:
-- name: test
-  image: golang:1.14.4
-  failure: ignore
+- name: build
+  image: alpine
   environment:
-    GOOS: linux
-    GOARCH: amd64
-    
-- name: notify
-  image: plugins/slack
-  settings:
-    webhook: https://hooks.slack.com/services/...
-    when:
-    status:
-    - failure
-    - success
-  
-  
-trigger:
-  event:
-    exclude:
-    - push
+    USERNAME:
+      from_secret: docker_username
+    PASSWORD:
+      from_secret: docker_password
