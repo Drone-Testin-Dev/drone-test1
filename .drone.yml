@@ -1,6 +1,13 @@
-kind: template
-load: plugin.jsonnet
-data:
-  stepName: my_step
-  image: my_image
-  commands: my_command
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: golang
+  commands:
+  - go build
+  - go test
+
+---
